@@ -1,36 +1,54 @@
 
-{% extends "onlinecourse/course_detail_bootstrap.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block content %}
-<div class="container mt-5 mb-5">
+    <title>Exam Results</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+    <nav class="navbar navbar-light bg-light mb-3">
+        <a class="navbar-brand"
+           href="{% url 'onlinecourse:index' %}">
+            Home
+        </a>
+    </nav>
 
     {% if grade >= 80 %}
+
     <div class="alert alert-success" role="alert">
-        <h3>Congratulations, {{ user.first_name }}!</h3>
-        <p>
-            You have passed the exam and completed the
-            course with score {{ grade }}/100.
-        </p>
-    </div>
-    {% else %}
-    <div class="alert alert-danger" role="alert">
-        <h3>Failed</h3>
-        <p>
-            Sorry, {{ user.first_name }}!
-            You have failed the exam with score
-            {{ grade }}/100.
-        </p>
+        <strong>Congratulations, {{ user.first_name }}!</strong>
+        You have passed the exam and completed the course
+        with score {{ grade }}/100
     </div>
 
-    <a class="btn btn-primary mb-3"
-       href="/onlinecourse/{{ course.id }}/">
+    {% else %}
+
+    <div class="alert alert-danger" role="alert">
+        <strong>Failed</strong>
+        Sorry, {{ user.first_name }}!
+        You have failed the exam with score {{ grade }}/100
+    </div>
+
+    <a href="{% url 'onlinecourse:course_details' course.id %}"
+       class="btn btn-primary mb-3">
         Retake Exam
     </a>
+
     {% endif %}
 
     <h3 class="mt-4">Exam Results</h3>
 
     {% for question in course.question_set.all %}
+
     <div class="card mt-3">
 
         <div class="card-header">
@@ -38,36 +56,47 @@
         </div>
 
         <div class="card-body">
+
             {% for choice in question.choice_set.all %}
+
             <div class="form-check mb-2">
 
                 {% if choice.is_correct and choice in choices %}
+
                 <div class="text-success">
                     Correct answer: {{ choice.content }}
                 </div>
 
                 {% elif choice.is_correct and choice not in choices %}
+
                 <div class="text-warning">
                     Not selected: {{ choice.content }}
                 </div>
 
                 {% elif not choice.is_correct and choice in choices %}
+
                 <div class="text-danger">
                     Wrong answer: {{ choice.content }}
                 </div>
 
                 {% else %}
+
                 <div>
                     {{ choice.content }}
                 </div>
+
                 {% endif %}
 
             </div>
-            {% endfor %}
-        </div>
 
+            {% endfor %}
+
+        </div>
     </div>
+
     {% endfor %}
 
 </div>
-{% endblock %}
+
+</body>
+</html>
